@@ -22,7 +22,7 @@ function varargout = MainForm(varargin)
 
 % Edit the above text to modify the response to help MainForm
 
-% Last Modified by GUIDE v2.5 04-Oct-2016 17:58:11
+% Last Modified by GUIDE v2.5 04-Oct-2016 20:34:25
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -43,7 +43,6 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-
 % --- Executes just before MainForm is made visible.
 function MainForm_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -61,6 +60,8 @@ guidata(hObject, handles);
 
 % UIWAIT makes MainForm wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
+global imMap;
+imMap = containers.Map;
 
 
 % --- Outputs from this function are returned to the command line.
@@ -81,19 +82,22 @@ function applyButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on selection change in listbox1.
-function listbox1_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
+% --- Executes on selection change in listOfWorkspace.
+function listOfWorkspace_Callback(hObject, eventdata, handles)
+% hObject    handle to listOfWorkspace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox1
-
+% Hints: contents = cellstr(get(hObject,'String')) returns listOfWorkspace contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listOfWorkspace
+global imMap;
+contents = cellstr(get(hObject,'String'));
+imshow(imMap(contents{get(hObject,'Value')}).im,'Parent', handles.showWindow);
+set(handles.title,'String', imMap(contents{get(hObject,'Value')}).title);
 
 % --- Executes during object creation, after setting all properties.
-function listbox1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
+function listOfWorkspace_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listOfWorkspace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -126,13 +130,20 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
 % --- Executes on button press in openButton.
 function openButton_Callback(hObject, eventdata, handles)
 % hObject    handle to openButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+global imMap;
+[FileName,PathName] = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files';
+'*.*','All Files' },'Open Image');
+imMap(FileName) = Image(imread(fullfile(PathName, FileName)),FileName);
+listStrings = get(handles.listOfWorkspace, 'String');
+listStrings{length(listStrings)+1} = imMap(FileName).title;
+set(handles.listOfWorkspace, 'String', listStrings);
+   
+      
 
 % --- Executes on selection change in listbox2.
 function listbox2_Callback(hObject, eventdata, handles)
@@ -187,19 +198,19 @@ function saveButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on selection change in listbox3.
-function listbox3_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox3 (see GCBO)
+% --- Executes on selection change in listOfFnctions.
+function listOfFnctions_Callback(hObject, eventdata, handles)
+% hObject    handle to listOfFnctions (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox3 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox3
+% Hints: contents = cellstr(get(hObject,'String')) returns listOfFnctions contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listOfFnctions
 
 
 % --- Executes during object creation, after setting all properties.
-function listbox3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox3 (see GCBO)
+function listOfFnctions_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listOfFnctions (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
