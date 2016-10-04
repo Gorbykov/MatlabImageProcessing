@@ -22,7 +22,7 @@ function varargout = MainForm(varargin)
 
 % Edit the above text to modify the response to help MainForm
 
-% Last Modified by GUIDE v2.5 04-Oct-2016 20:34:25
+% Last Modified by GUIDE v2.5 04-Oct-2016 23:09:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,6 +62,7 @@ guidata(hObject, handles);
 % uiwait(handles.figure1);
 global imMap;
 imMap = containers.Map;
+clc
 
 
 % --- Outputs from this function are returned to the command line.
@@ -206,7 +207,18 @@ function listOfFnctions_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns listOfFnctions contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listOfFnctions
-
+contents = cellstr(get(hObject,'String'));
+global I;
+I = getimage(handles.showWindow);
+switch contents{get(hObject,'Value')}
+    case 'rgb2gray'        
+        I = rgb2gray(I);
+    case 'imnoise'
+        fig = openfig('imnoiseControl.fig');
+        figure(fig);
+end;
+imshow(I,'Parent', handles.showWindow); 
+handles.title.String = strcat(handles.title.String,' {', contents{get(hObject,'Value')},'}');
 
 % --- Executes during object creation, after setting all properties.
 function listOfFnctions_CreateFcn(hObject, eventdata, handles)
@@ -221,8 +233,23 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton5.
-function pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton5 (see GCBO)
+% --- Executes on button press in clearListButton.
+function clearListButton_Callback(hObject, eventdata, handles)
+% hObject    handle to clearListButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global imMap
+imMap = containers.Map;
+set(handles.listOfWorkspace, 'String', {});
+
+% --- Executes on button press in delButton.
+function delButton_Callback(hObject, eventdata, handles)
+% hObject    handle to delButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global imMap;
+contents = cellstr(get(handles.listOfWorkspace,'String'));
+remove(imMap,contents{get(handles.listOfWorkspace,'Value')});
+contents{get(handles.listOfWorkspace,'Value')}=[];
+set(handles.listOfWorkspace,'String', contents(~cellfun('isempty',contents)));
+set(handles.listOfWorkspace,'Value',1);
