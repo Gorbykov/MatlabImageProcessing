@@ -22,7 +22,7 @@ function varargout = imnoiseControl(varargin)
 
 % Edit the above text to modify the response to help imnoiseControl
 
-% Last Modified by GUIDE v2.5 04-Oct-2016 23:43:18
+% Last Modified by GUIDE v2.5 12-Oct-2016 22:06:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -74,18 +74,18 @@ varargout{1} = handles.output;
 
 
 
-function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
+function vEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to vEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
+% Hints: get(hObject,'String') returns contents of vEdit as text
+%        str2double(get(hObject,'String')) returns contents of vEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
+function vEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to vEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -97,18 +97,18 @@ end
 
 
 
-function edit2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
+function mEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to mEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit2 as text
-%        str2double(get(hObject,'String')) returns contents of edit2 as a double
+% Hints: get(hObject,'String') returns contents of mEdit as text
+%        str2double(get(hObject,'String')) returns contents of mEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
+function mEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to mEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -120,18 +120,18 @@ end
 
 
 
-function edit3_Callback(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+function dEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to dEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+% Hints: get(hObject,'String') returns contents of dEdit as text
+%        str2double(get(hObject,'String')) returns contents of dEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+function dEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to dEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -142,8 +142,33 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
+% --- Executes on button press in okButton.
+function okButton_Callback(hObject, eventdata, handles)
+% hObject    handle to okButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global mainHendles
+global I
+
+type = get(get(handles.typeGroup,'SelectedObject'),'String')
+switch type
+    case 'gaussian'
+        bufI=imnoise(I,type,str2double(get(handles.mEdit,'String')),str2double(get(handles.vEdit,'String')));
+    case 'salt & pepper'
+        bufI=imnoise(I,type,str2double(get(handles.dEdit,'String')));
+    case 'speckle'
+        bufI=imnoise(I,type,str2double(get(handles.vEdit,'String')));
+    otherwise        
+        bufI=imnoise(I,type);
+end
+imshow(bufI,'Parent', mainHendles.showWindow); 
+
+
+% --- Executes during object creation, after setting all properties.
+function figure1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+global I
+global mainHendles
+I=getimage(mainHendles.showWindow);

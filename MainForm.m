@@ -197,6 +197,16 @@ function saveButton_Callback(hObject, eventdata, handles)
 % hObject    handle to saveButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global imMap;
+i=int8(1);
+while isKey(imMap,strcat(handles.title.String,' (',int2str(i),')'))
+    i=i+1;
+end
+handles.title.String = strcat(handles.title.String,' (',int2str(i),')');
+imMap(handles.title.String) = Image(getimage(handles.showWindow),handles.title.String);
+listStrings = get(handles.listOfWorkspace, 'String');
+listStrings{length(listStrings)+1} = imMap(handles.title.String).title;
+set(handles.listOfWorkspace, 'String', listStrings);
 
 
 % --- Executes on selection change in listOfFnctions.
@@ -210,12 +220,13 @@ function listOfFnctions_Callback(hObject, eventdata, handles)
 contents = cellstr(get(hObject,'String'));
 global I;
 I = getimage(handles.showWindow);
+global mainHendles
+mainHendles = handles;
 switch contents{get(hObject,'Value')}
     case 'rgb2gray'        
         I = rgb2gray(I);
     case 'imnoise'
-        fig = openfig('imnoiseControl.fig');
-        figure(fig);
+        imnoiseControl;
 end;
 imshow(I,'Parent', handles.showWindow); 
 handles.title.String = strcat(handles.title.String,' {', contents{get(hObject,'Value')},'}');
