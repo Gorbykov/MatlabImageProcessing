@@ -223,10 +223,18 @@ I = getimage(handles.showWindow);
 global mainHendles
 mainHendles = handles;
 switch contents{get(hObject,'Value')}
+    case 'userF'
+        I = userF();
     case 'rgb2gray'        
         I = rgb2gray(I);
     case 'imnoise'
         imnoiseControl;
+    case 'imnoise3'
+        C=[0 64; 0 128; 32 32; 64 0; 128 0; -32 32];
+        [r,R,S] = imnoise3(size(I),C);
+        figure, imshow(S,[])
+        figure, imshow(r,[])
+        I=I.*R;
 end;
 imshow(I,'Parent', handles.showWindow); 
 handles.title.String = strcat(handles.title.String,' {', contents{get(hObject,'Value')},'}');
