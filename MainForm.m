@@ -218,7 +218,7 @@ function listOfFnctions_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns listOfFnctions contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listOfFnctions
 contents = cellstr(get(hObject,'String'));
-global I;
+global I  P;
 I = getimage(handles.showWindow);
 global mainHendles
 mainHendles = handles;
@@ -246,11 +246,15 @@ switch contents{get(hObject,'Value')}
         %end;
     case 'fourierSpectrum'
         I=fourierSpectrum();
+    case 'histroi'
+        P=histroi(I);
+        figure, bar(p,1);
+        
 end;
 I = normalizeImg(I);
 imshow(I,'Parent', handles.showWindow); 
 handles.title.String = strcat(handles.title.String,' {', contents{get(hObject,'Value')},'}');
-imsave( handles.showWindow);
+%imsave( handles.showWindow);
 
 % --- Executes during object creation, after setting all properties.
 function listOfFnctions_CreateFcn(hObject, eventdata, handles)
