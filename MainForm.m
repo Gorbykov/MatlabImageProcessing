@@ -230,14 +230,27 @@ switch contents{get(hObject,'Value')}
     case 'imnoise'
         imnoiseControl;
     case 'imnoise3'
-        C=[0 64; 0 128; 32 32; 64 0; 128 0; -32 32];
-        [r,R,S] = imnoise3(size(I),C);
+        %C=[0 64; 0 128; 32 32; 64 0; 128 0; -32 32];
+        C=[6 32; -2 2];
+        A=[1 1];
+        [r,R,S] = imnoise3(size(I),C,A);
         figure, imshow(S,[])
         figure, imshow(r,[])
-        I=I.*R;
+        if ndims(I) == 3
+            I = rgb2gray(I)+r;
+        else
+            I = I+r;
+        end;
+        %for k=0:ndims(I)
+        %    I(:,:,k)=I(:,:,k).*R;
+        %end;
+    case 'fourierSpectrum'
+        I=fourierSpectrum();
 end;
+I = normalizeImg(I);
 imshow(I,'Parent', handles.showWindow); 
 handles.title.String = strcat(handles.title.String,' {', contents{get(hObject,'Value')},'}');
+imsave( handles.showWindow);
 
 % --- Executes during object creation, after setting all properties.
 function listOfFnctions_CreateFcn(hObject, eventdata, handles)

@@ -20,5 +20,5 @@ for j = 1:K
     R(u2, v2) = -i * (A(j)/2) * exp(i*2*pi*C(j, 2) * B(j, 2)/N);
 end
 % Compute spectrum and spatial sinusoidal pattern. 
-S = abs(R); 
+S = log(1+abs(R)); 
 r = real(ifft2(ifftshift(R)));
