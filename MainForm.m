@@ -253,6 +253,10 @@ switch contents{get(hObject,'Value')}
         I=runSpfilt(I); 
     case 'distortFilter'
         I=distortFilter(I); 
+    case 'adpmedian'
+        I=adpmedian(I,7); 
+    case 'medianFilter'
+        I=medianFilter(I); 
         
 end;
 I = normalizeImg(I);
