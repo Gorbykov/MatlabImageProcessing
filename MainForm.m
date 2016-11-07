@@ -250,7 +250,9 @@ switch contents{get(hObject,'Value')}
         P=histroi(I);
         figure, bar(p,1);
     case 'runSpfilt'
-        I=runSpfilt(I);   
+        I=runSpfilt(I); 
+    case 'distortFilter'
+        I=distortFilter(I); 
         
 end;
 I = normalizeImg(I);
